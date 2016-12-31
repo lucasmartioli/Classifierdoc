@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+
 /**
  *
  * @author Lucas
@@ -25,16 +26,18 @@ public class Extractor {
 
         ArrayList<Document> documents = new ArrayList<>();
 
-        System.out.println("Extracting files in: " + pathBase);
+//        System.out.println("Extracting files in: " + pathBase);
 
         for (String file : files) {
 
-            System.out.println("Extracting text from pdf: " + file);
+//            System.out.println("Extracting text from pdf: " + file);
             PDDocument pdDocument = null;
             String paperString = null;
             try {
+//                java.util.logging.Logger.getLogger("org.apache.pdfbox").setLevel(java.util.logging.Level.OFF); 
                 pdDocument = PDDocument.load(new File(pathBase + file));
                 paperString = new PDFTextStripper().getText(pdDocument);
+                pdDocument.close();
                 Document document = new Document(paperString);
                 documents.add(document);
 

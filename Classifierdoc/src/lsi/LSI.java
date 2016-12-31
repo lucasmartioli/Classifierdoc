@@ -255,22 +255,9 @@ public class LSI {
 	public static void main(String[] args) throws IOException {
 		String query = null;
 		LSI lsiObj = null;
-			
-		if (args.length != 3 && args.length != 2) {
-			System.out.println("Arguments missing. Please enter the required parameters i.e. directory path to documents, path to stop list, number of singular values (optional).\nEXITING");
-			System.exit(1);
-		}
-	
-		if (args.length == 2)
-			lsiObj = new LSI(args[0], args[1]);
-		else {
-			try {
-				lsiObj = new LSI(args[0], args[1], Integer.parseInt(args[2]));
-			} catch (Exception e) {
-				System.out.println("\nEnter valid parameters.");
-				System.exit(1);
-			}
-		}
+                
+                lsiObj = new LSI("C:\\estudo2", "stopwords.txt");
+		
 		
 		lsiObj.createTermDocumentMatrix();	
 		lsiObj.performSingularValueDecomposition();
