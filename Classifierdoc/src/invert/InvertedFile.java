@@ -40,13 +40,13 @@ public class InvertedFile {
         try {
             fstream = new FileInputStream(stopListPath);
         } catch (FileNotFoundException e) {
-            System.out.println("File does not exist. Set correct path");
+            System.out.println("O arquivo de palavras de parada não existe!");
         }
 
         DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        BufferedReader bffr = new BufferedReader(new InputStreamReader(in));
 
-        while ((line = br.readLine()) != null) {
+        while ((line = bffr.readLine()) != null) {
             stopWordList.add(line.trim().toLowerCase());
         }
     }
@@ -177,6 +177,9 @@ public class InvertedFile {
 
         String[] files = {fileName};
         ArrayList<Document> d = Extractor.returnDocuments("C:\\estudo2\\", files);
+        
+        if (d.size() <= 0)
+            return;
 
         wordsInLine = d.get(0).getContent().split(whiteSpacePattern);
         for (i = 0; i < wordsInLine.length; i++) {
@@ -261,27 +264,5 @@ public class InvertedFile {
         }
 
         return documentList;
-    }
-
-    /**
-     *
-     * @param documentName
-     * @throws IOException
-     *
-     * Print words from the document <documentName>. Total number of words
-     * printed equals contextWords
-     */
-    public void printWords(String documentName) throws IOException {
-        int wordCounter = 0;
-
-        String[] files = {documentName};
-        ArrayList<Document> d = Extractor.returnDocuments("C:\\estudo2\\", files);
-
-        String[] words = d.get(0).getContent().split(whiteSpacePattern);
-        for (int i = 0; i < words.length && wordCounter < contextWords; i++, wordCounter++) {
-            System.out.print(words[i] + " ");
-        }
-
-        System.out.println("\n");
     }
 }

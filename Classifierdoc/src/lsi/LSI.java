@@ -80,11 +80,6 @@ public class LSI {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param query entered by the user 
-	 * @return Query vector represented in terms of a column matrix
-	 */
 	private Matrix createQueryVector(String query) {
 		List<String> words = Arrays.asList(query.split(invert.InvertedFile.whiteSpacePattern));
 		TreeMap<String, Integer> wordList = invObj.getWordList();
@@ -107,11 +102,6 @@ public class LSI {
 		return queryVector;
 	}
 	
-	/**
-	 * 
-	 * @param matrix (column matrix) for which the vector modulus is to be calculated
-	 * @return Vector modulus
-	 */
 	public double getVectorModulus(Matrix matrix) {
 		double product = 0;
 		
@@ -203,25 +193,16 @@ public class LSI {
 		return maxDocName;
 	}
 	
-	/**
-	 * 
-	 * @param similarityValues
-	 * @param docCount
-	 * @throws IOException
-	 * 
-	 * Displays the top <relevantDocs> documents which match the user query
-	 */
-	private void displayRelevantDocuments(TreeMap<String, Double> similarityValues, int docCount) throws IOException {
-		if (docCount > TD.getColumnDimension()) 
-			docCount = TD.getColumnDimension();
+	private void exibeRelevancia(TreeMap<String, Double> similaridade, int docContador) throws IOException {
+		if (docContador > TD.getColumnDimension()) 
+			docContador = TD.getColumnDimension();
 
 		System.out.println();
-		for (int i = 0; i < docCount; i++) {
-			String documentName = findMax(similarityValues);
-			if (documentName != null) {
-				System.out.println(i + 1 + ". Document: " + documentName + ", Relevance score: " + similarityValues.get(documentName));
-				invObj.printWords(documentName);
-				similarityValues.remove(documentName);
+		for (int i = 0; i < docContador; i++) {
+			String nomeDoDocumento = findMax(similaridade);
+			if (nomeDoDocumento != null) {
+				System.out.println(i + 1 + ". O Documento: " + nomeDoDocumento + ", Tem uma taxa de relevância de: " + similaridade.get(nomeDoDocumento));
+				similaridade.remove(nomeDoDocumento);
 			} else {
 				System.out.println("\nOnly " + i + " relevant documents were there\n");
 				return;
@@ -241,7 +222,7 @@ public class LSI {
 		
 		if (eligibleQuery == true) {
 			TreeMap<String, Double> documentSimilarityValues = findSimilarities(queryVector);
-			displayRelevantDocuments(documentSimilarityValues, relevantDocs);
+			exibeRelevancia(documentSimilarityValues, relevantDocs);
 			eligibleQuery = false;
 		} else {
 			System.out.println("The query you entered consists entirely of stop list words or words that don't appear in any documents");
