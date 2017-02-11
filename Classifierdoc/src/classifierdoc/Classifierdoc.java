@@ -9,35 +9,41 @@ package classifierdoc;
  *
  * @author Lucas
  */
+import Jama.Matrix;
 import extractor.Document;
 import extractor.Extractor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lsi.LSI;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 public class Classifierdoc {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        LSI lsiObj = null;
 
-        String[] files = new String[350];
-        for (int i = 0; i < files.length; i++) {
-            files[i] = i + ".pdf";            
+        lsiObj = new LSI("C:\\estudo2", "stopwords.txt");
+
+        lsiObj.createTermDocumentMatrix();
+        lsiObj.performSingularValueDecomposition();
+        HashMap<String, Double> s = lsiObj.calculoDeSimilaridade();
+        ArrayList<String> documents = lsiObj.getListaDeDocumentos();
+        
+        for (Map.Entry<String, Double> entry : s.entrySet()) {
+            String key = entry.getKey();
+            Double value = entry.getValue();            
+            System.out.println(key + " \t " + value);
+            
         }
+      
 
-        //Passar o caminho base por parametro e os arquivos!!
-        ArrayList<Document> documents = Extractor.returnDocuments("c:/estudo/", files);
-
-        for (Document document : documents) {
-            System.out.print(document.getContent());
-        }
-
+        System.out.println("\nThank you for trying out the system.");
     }
 
 }
