@@ -10,6 +10,9 @@ package classifierdoc;
  * @author Lucas
  */
 import Jama.Matrix;
+import clustering.Cluster;
+import clustering.ClusterBag;
+import clustering.Clustering;
 import extractor.Document;
 import extractor.Extractor;
 import java.io.File;
@@ -32,17 +35,32 @@ public class Classifierdoc {
 
         lsiObj.createTermDocumentMatrix();
         lsiObj.performSingularValueDecomposition();
-        HashMap<String, Double> s = lsiObj.calculoDeSimilaridade();
+        Matrix s = lsiObj.calculoDeSimilaridade();
         ArrayList<String> documents = lsiObj.getListaDeDocumentos();
         
-        for (Map.Entry<String, Double> entry : s.entrySet()) {
-            String key = entry.getKey();
-            Double value = entry.getValue();            
-            System.out.println(key + " \t " + value);
-            
+        ArrayList<Integer> docs = new ArrayList<>();
+        
+        for (int i = 0; i < documents.size(); i++) {
+            docs.add(i + 1);            
         }
-      
+        
+        System.out.println(docs.toString());
+        
+//        for (Map.Entry<String, Double> entry : s.entrySet()) {
+//            String key = entry.getKey();
+//            Double value = entry.getValue();            
+//            System.out.println(key + " \t " + value);
+//            
+//        }
 
+        System.out.println("T: " + docs.size());
+        
+        Clustering c = new Clustering(docs);        
+        Cluster.setMatrixSimilarity(s);
+        ClusterBag cb = c.generate();
+        
+        cb.show(documents);        
+        
         System.out.println("\nThank you for trying out the system.");
     }
 

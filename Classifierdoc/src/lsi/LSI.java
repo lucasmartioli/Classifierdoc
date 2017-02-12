@@ -114,9 +114,9 @@ public class LSI {
         return similarity;
     }
 
-    public HashMap<String, Double> calculoDeSimilaridade() {
-        ArrayList<String> documents = invObj.getDocumentList();
-        HashMap<String, Double> hashDocumentsCombine = new HashMap<>();                
+    public Matrix calculoDeSimilaridade() {
+        ArrayList<String> documents = invObj.getDocumentList();        
+        Matrix similarity = new Matrix(documents.size(), documents.size());
         Matrix documentMatrix1;
         Matrix documentMatrix2;
 
@@ -124,12 +124,13 @@ public class LSI {
             documentMatrix1 = getDocumentColumnMatrix(lineNumber);
             for (int columnNumber = 0 + lineNumber + 1; columnNumber < documents.size(); columnNumber++) {
                 documentMatrix2 = getDocumentColumnMatrix(columnNumber);
-                hashDocumentsCombine.put(documents.get(lineNumber) + " x " + documents.get(columnNumber), getSimilarity(documentMatrix1, documentMatrix2));                              
+                similarity.set(lineNumber, columnNumber, getSimilarity(documentMatrix1, documentMatrix2));
+                //hashDocumentsCombine.put(documents.get(lineNumber) + " x " + documents.get(columnNumber), );                              
             }
 
         }
 
-        return hashDocumentsCombine;
+        return similarity;
     }
 
 }
