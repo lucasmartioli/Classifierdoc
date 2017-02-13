@@ -16,10 +16,10 @@ import java.util.Random;
 public class Clustering {
 
     private final ArrayList<Integer> docs;
-    public static final int minClusters = 2;
+    public static final int minClusters = 1;
     private ArrayList<ClusterBag> population;
-    private final int populationSize = 300;
-    private final int maxInteractions = 5000;
+    private final int populationSize = 900;
+    private final int maxInteractions = 10000;
     private final int sizeGeneration = 1000;
 
     public Clustering(ArrayList<Integer> docs) {
@@ -27,7 +27,7 @@ public class Clustering {
     }
 
     public double objectiveFunction(ClusterBag cb) {
-        return cb.bagValue * cb.size();
+        return cb.bagValue;
 
     }
 
@@ -45,7 +45,12 @@ public class Clustering {
             ClusterBag cluster = new ClusterBag();
             cluster.generateRandom(cloneDocs());
             //cluster.show();
-            population.add(cluster);
+            if (cluster.isSolution()) {
+                population.add(cluster);
+            } else {
+                i--;
+            }
+                
         }
 
     }
@@ -89,7 +94,7 @@ public class Clustering {
         ArrayList<ClusterBag> generation = new ArrayList<>();
 
         for (int i = 0; i < sizeGeneration; i++) {
-            generation.add(crossOver(best, population.get(gerador.nextInt(population.size() - 1))));
+            generation.add(crossOver(best, population.get(gerador.nextInt((population.size()/2) - 1)), population.get(gerador.nextInt(population.size() - (population.size()/2) - 1))));
         }
 
         for (ClusterBag son : generation) {
@@ -99,16 +104,16 @@ public class Clustering {
 
     }
 
-    private ClusterBag crossOver(ClusterBag cb1, ClusterBag cb2) {
+    private ClusterBag crossOver(ClusterBag cb1, ClusterBag cb2, ClusterBag cb3) {
 
-        ClusterBag cb3 = new ClusterBag();
+        ClusterBag cb4 = new ClusterBag();
 
         Random gerador = new Random(Calendar.getInstance().getTimeInMillis());
 
         ArrayList<Integer> d = cloneDocs();
 
         Cluster bestCluster = returnBestCluster(cb1);
-        cb3.add(bestCluster);
+        cb4.add(bestCluster);
 
         for (Integer integer : bestCluster.docs) {
             d.remove(d.indexOf(integer));
@@ -124,36 +129,32 @@ public class Clustering {
             }
         }
 
-        cb3.add(nCluster);
-//
-//        boolean sucess = false;
-//        while (!sucess) {
-//            if (bestCluster.docs.size() == 0) {
-//                break;
-//            }
-//
-//            for (Integer integer : bestCluster.docs) {
-//                if (d.indexOf(integer) < 0 && bestCluster.docs.size() > 0) {
-//                    bestCluster.docs.remove(integer);
-//                    sucess = false;
-//                    break;
-//                } else if (bestCluster.docs.size() > 0) {
-//                    sucess = true;
-//                    d.remove(d.indexOf(integer));
-//                } else {
-//                    sucess = true;
-//                }
-//            }
-//        }
+        if (nCluster.size() != 0)
+            cb4.add(nCluster);
+        
+        bestCluster2 = returnBestCluster(cb3);
+        nCluster = new Cluster();
 
-//        bestCluster.show();
+        for (Integer integer : bestCluster2.docs) {
+            if (d.indexOf(integer) != -1) {
+                nCluster.add(integer);
+                d.remove(d.indexOf(integer));
+            }
+        }
+
+        if (nCluster.size() != 0)
+            cb4.add(nCluster);
+
         if (d.size() > 0) {
-            int kclusters = gerador.nextInt(d.size() - Clustering.minClusters) + Clustering.minClusters;
+            int kclusters = gerador.nextInt(d.size());
+            if (kclusters == 0)
+                kclusters = 1;
+            
             int max = d.size() / kclusters;
 
             for (int i = 0; i < kclusters; i++) {
                 Cluster cluster = new Cluster();
-                cb3.add(cluster);
+                cb4.add(cluster);
 
                 while (d.size() > 0) {
                     int n = 0;
@@ -171,9 +172,9 @@ public class Clustering {
             }
         }
 
-        cb3.calculate();
+        cb4.calculate();
 
-        return cb3;
+        return cb4;
     }
 
     Cluster returnBestCluster(ClusterBag cb) {

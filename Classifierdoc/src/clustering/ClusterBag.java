@@ -106,7 +106,7 @@ public class ClusterBag {
                 return false;
         }
         
-        return bagValue > 0;        
+        return true;        
     }
 
 }

@@ -40,8 +40,21 @@ public class Classifierdoc {
         
         ArrayList<Integer> docs = new ArrayList<>();
         
+        System.out.print("\t");
         for (int i = 0; i < documents.size(); i++) {
+            System.out.print(documents.get(i) + "\t");
             docs.add(i + 1);            
+            
+        }
+        
+        System.out.println("");
+        
+        for (int i = 0; i < documents.size(); i++) {
+            System.out.print(documents.get(i) + "\t");            
+            for (int j = 0; j < documents.size(); j++) {
+                System.out.print(s.get(i, j) + "\t");
+            }
+            System.out.println("");
         }
         
         System.out.println(docs.toString());

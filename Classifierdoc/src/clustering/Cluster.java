@@ -33,6 +33,7 @@ public class Cluster {
                 value += similarity.get(i, j);
             }
         }
+        value /= size();
     }
 
     void add(Integer doc) {
