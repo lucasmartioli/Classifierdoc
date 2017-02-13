@@ -19,15 +19,15 @@ public class Clustering {
     public static final int minClusters = 2;
     private ArrayList<ClusterBag> population;
     private final int populationSize = 300;
-    private final int maxInteractions = 10000;
-    private final int sizeGeneration = 500;
+    private final int maxInteractions = 5000;
+    private final int sizeGeneration = 1000;
 
     public Clustering(ArrayList<Integer> docs) {
         this.docs = docs;
     }
 
-    public double objectiveFunction(ClusterBag p) {
-        return p.bagValue;
+    public double objectiveFunction(ClusterBag cb) {
+        return cb.bagValue * cb.size();
 
     }
 
