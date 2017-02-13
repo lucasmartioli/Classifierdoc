@@ -102,7 +102,7 @@ public class ClusterBag {
 
     boolean isSolution() {
         for (Cluster cluster : clusterBag) {
-            if (cluster.docs.size() == 0)
+            if (cluster.docs.size() == 0 || cluster.value <= 0)
                 return false;
         }
         
